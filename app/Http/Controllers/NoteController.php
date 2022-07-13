@@ -39,12 +39,14 @@ class NoteController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return NoteResource
      */
-    public function show($id)
+    public function show(int $id): NoteResource
     {
-        //
+        $note = Note::find($id);
+
+        return new NoteResource($note);
     }
 
     /**
