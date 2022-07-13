@@ -68,11 +68,11 @@ class NoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return void
      */
-    public function destroy($id)
+    public function destroy(int $id): void
     {
-        //
+        Note::destroy($id);
     }
 }

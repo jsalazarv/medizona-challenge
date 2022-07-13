@@ -24,4 +24,5 @@ Route::group(['prefix' => 'notes'], function () {
     Route::post('/', [NoteController::class, 'store']);
     Route::get('/{id}', [NoteController::class, 'show']);
     Route::put('/{id}', [NoteController::class, 'update']);
+    Route::delete('/{id}', [NoteController::class, 'destroy']);
 });
