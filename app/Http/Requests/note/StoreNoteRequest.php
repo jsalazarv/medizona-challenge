@@ -26,7 +26,10 @@ class StoreNoteRequest extends FormRequest
         return [
             'customer_id' => ['required', 'integer', 'max:255'],
             'date' => ['required', 'string', 'max:255'],
-            'total' => ['required', 'integer', 'max:255']
+            //'total' => ['required', 'integer'],
+            "items" => ['required', 'array', 'min:1'],
+            'items.*.id'  => ['required','integer','min:1'],
+            'items.*.quantity'  => ['required','integer','min:1'],
         ];
     }
 }
