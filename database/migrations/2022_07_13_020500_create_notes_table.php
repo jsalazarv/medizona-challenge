@@ -19,6 +19,7 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('customers')
                 ->nullOnDelete();
+            $table->string('date');
             $table->integer('total');
             $table->timestamps();
         });
