@@ -34,22 +34,21 @@ class NoteController extends Controller
     public function store(StoreNoteRequest $request): NoteResource
     {
         $selectedItems = collect($request->get('items'));
-        $itemsId = $selectedItems->pluck('id');
-        $itemsQuantity = $selectedItems->pluck('quantity');
-        $itemsDetail = Item::find($itemsId);
+        $itemIds = $selectedItems->pluck('id');
+        $queriedItems = Item::find($itemIds);
 
-        $total = 0;
-        foreach($itemsDetail as $index=>$itemDetail) {
-            $total += $itemsQuantity[$index] * $itemDetail->price;
-        }
+        $items = $queriedItems->map(function ($item, $index) use ($selectedItems) {
+            $itemsQuantity = $selectedItems->get($index)['quantity'];
 
-        $data = [
-            'customer_id' => $request->get('customer_id'),
-            'date' => $request->get('date'),
-            'total' => $total,
-        ];
+            return [
+                'quantity' => $itemsQuantity,
+                'total' => $item->price * $itemsQuantity,
+            ];
+        });
 
-        $note = Note::create($data);
+        $total = $items->sum('total');
+        $data = $request->except('items');
+        $note = Note::create([...$data, 'total' => $total]);
 
         return new NoteResource($note);
     }
