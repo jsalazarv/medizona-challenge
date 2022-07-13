@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\note\StoreNoteRequest;
 use App\Http\Requests\note\UpdateNoteRequest;
 use App\Http\Resources\NoteResource;
+use App\Models\Item;
 use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -32,7 +33,22 @@ class NoteController extends Controller
      */
     public function store(StoreNoteRequest $request): NoteResource
     {
-        $note = Note::create($request->all());
+        $selectedItems = collect($request->get('items'));
+        $itemIds = $selectedItems->pluck('id');
+        $queriedItems = Item::find($itemIds);
+
+        $items = $queriedItems->map(function ($item, $index) use ($selectedItems) {
+            $itemsQuantity = $selectedItems->get($index)['quantity'];
+
+            return [
+                'quantity' => $itemsQuantity,
+                'total' => $item->price * $itemsQuantity,
+            ];
+        });
+
+        $total = $items->sum('total');
+        $data = $request->except('items');
+        $note = Note::create([...$data, 'total' => $total]);
 
         return new NoteResource($note);
     }
