@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @method static find($items)
+ * @method static find(\Illuminate\Support\Collection $itemIds)
  */
 class Item extends Model
 {
