@@ -14,12 +14,8 @@ class CustomerSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
-        DB::table('customers')->insert([
-            'name' => 'Juan',
-            'email' => 'juan@medizona.com',
-            'address' => 'lorem ipsum',
-        ]);
+        \App\Models\Customer::factory(20)->create();
     }
 }
