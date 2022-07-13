@@ -7,6 +7,7 @@ use App\Http\Requests\note\UpdateNoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Models\Item;
 use App\Models\Note;
+use App\Models\NoteItem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -41,6 +42,7 @@ class NoteController extends Controller
             $itemsQuantity = $selectedItems->get($index)['quantity'];
 
             return [
+                'item_id' => $item->id,
                 'quantity' => $itemsQuantity,
                 'total' => $item->price * $itemsQuantity,
             ];
@@ -49,6 +51,17 @@ class NoteController extends Controller
         $total = $items->sum('total');
         $data = $request->except('items');
         $note = Note::create([...$data, 'total' => $total]);
+
+        $items->each(function ($item, $key) use ($note) {
+            NoteItem::create([
+                'note_id' => $note->id,
+                'item_id' => $item['item_id'],
+                'quantity' => $item['quantity'],
+                'total' => $item['total'],
+            ]);
+        });
+
+        $note->load('customer');
 
         return new NoteResource($note);
     }
