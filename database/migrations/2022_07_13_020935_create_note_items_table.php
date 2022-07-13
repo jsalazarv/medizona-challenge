@@ -16,13 +16,11 @@ return new class extends Migration
         Schema::create('note_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('note_id')
-                ->nullable()
                 ->constrained('notes')
-                ->nullOnDelete();
+                ->onDelete('cascade');
             $table->foreignId('item_id')
-                ->nullable()
                 ->constrained('items')
-                ->nullOnDelete();
+                ->onDelete('cascade');
             $table->integer('quantity');
             $table->integer('total');
             $table->timestamps();
