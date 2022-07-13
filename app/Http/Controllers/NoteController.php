@@ -6,17 +6,21 @@ use App\Http\Requests\note\StoreNoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class NoteController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request): AnonymousResourceCollection
     {
+        $notes = Note::paginate($request->get("'pageSize', 10"));
 
+        return NoteResource::collection($notes);
     }
 
     /**
