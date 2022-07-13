@@ -2,18 +2,16 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Item;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @property mixed id
- * @property mixed customer_id
- * @property mixed date
- * @property mixed total
+ * @property mixed name
+ * @property mixed address
  * @property mixed created_at
  * @property mixed updated_at
  */
-class NoteResource extends JsonResource
+class CustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,9 +23,8 @@ class NoteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'customer' => new CustomerResource($this->whenLoaded('customer')),
-            'date' => $this->date,
-            'total' => $this->total,
+            'name' => $this->name,
+            'address' => $this->address,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
