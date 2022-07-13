@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\NoteController;
 use Illuminate\Http\Request;
@@ -30,4 +31,8 @@ Route::group(['prefix' => 'notes'], function () {
 
 Route::group(['prefix' => 'items'], function () {
     Route::get('/', [ItemController::class, 'index']);
+});
+
+Route::group(['prefix' => 'customers'], function () {
+    Route::get('/', [CustomerController::class, 'index']);
 });
