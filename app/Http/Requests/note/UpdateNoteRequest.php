@@ -26,7 +26,7 @@ class UpdateNoteRequest extends FormRequest
         return [
             'customer_id' => ['required', 'integer', 'max:255'],
             'date' => ['required', 'string', 'max:255'],
-            'total' => ['required', 'integer', 'max:255']
+            //'total' => ['required', 'integer', 'max:255']
         ];
     }
 }
