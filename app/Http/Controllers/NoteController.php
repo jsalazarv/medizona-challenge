@@ -22,6 +22,7 @@ class NoteController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $notes = Note::paginate($request->get("'pageSize', 10"));
+        $notes->load('customer');
 
         return NoteResource::collection($notes);
     }
@@ -51,16 +52,7 @@ class NoteController extends Controller
         $total = $items->sum('total');
         $data = $request->except('items');
         $note = Note::create([...$data, 'total' => $total]);
-
-        $items->each(function ($item, $key) use ($note) {
-            NoteItem::create([
-                'note_id' => $note->id,
-                'item_id' => $item['item_id'],
-                'quantity' => $item['quantity'],
-                'total' => $item['total'],
-            ]);
-        });
-
+        $note->items()->attach($items);
         $note->load('customer');
 
         return new NoteResource($note);
@@ -75,6 +67,7 @@ class NoteController extends Controller
     public function show(int $id): NoteResource
     {
         $note = Note::find($id);
+        $note->load('customer');
 
         return new NoteResource($note);
     }
@@ -88,8 +81,26 @@ class NoteController extends Controller
      */
     public function update(UpdateNoteRequest $request, $id): NoteResource
     {
-        $note = Note::findOrFail($id);
-        $note->update($request->all());
+        $note = Note::find($id);
+        $selectedItems = collect($request->get('items'));
+        $itemIds = $selectedItems->pluck('id');
+        $queriedItems = Item::find($itemIds);
+
+        $items = $queriedItems->map(function ($item, $index) use ($selectedItems) {
+            $itemsQuantity = $selectedItems->get($index)['quantity'];
+
+            return [
+                'item_id' => $item->id,
+                'quantity' => $itemsQuantity,
+                'total' => $item->price * $itemsQuantity,
+            ];
+        });
+
+        $total = $items->sum('total');
+        $data = $request->except('items');
+        $note->update([...$data, 'total' => $total]);
+        $note->items()->sync($items);
+        $note->load('customer');
 
         return new NoteResource($note);
     }

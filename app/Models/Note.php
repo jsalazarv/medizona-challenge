@@ -25,7 +25,7 @@ class Note extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function item() {
-        return $this->belongsToMany(Item::class);
+    public function items() {
+        return $this->belongsToMany(Item::class, 'note_items');
     }
 }
