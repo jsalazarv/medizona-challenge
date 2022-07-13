@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\note\StoreNoteRequest;
+use App\Http\Requests\note\UpdateNoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Models\Note;
 use Illuminate\Http\Request;
@@ -52,13 +53,16 @@ class NoteController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param UpdateNoteRequest $request
+     * @param $id
+     * @return NoteResource
      */
-    public function update(Request $request, $id)
+    public function update(UpdateNoteRequest $request, $id): NoteResource
     {
-        //
+        $note = Note::findOrFail($id);
+        $note->update($request->all());
+
+        return new NoteResource($note);
     }
 
     /**
