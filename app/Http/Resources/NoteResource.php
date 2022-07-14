@@ -25,7 +25,9 @@ class NoteResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'customer_id' => $this->customer_id,
             'customer' => new CustomerResource($this->whenLoaded('customer')),
+            'items' => ItemResource::collection($this->whenLoaded('items')),
             'date' => $this->date,
             'total' => $this->total,
             'created_at' => $this->created_at,
