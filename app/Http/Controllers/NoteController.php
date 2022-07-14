@@ -22,7 +22,7 @@ class NoteController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $notes = Note::paginate($request->get("'pageSize', 10"));
-        $notes->load('customer');
+        $notes->load('customer', 'items');
 
         return NoteResource::collection($notes);
     }
@@ -53,7 +53,7 @@ class NoteController extends Controller
         $data = $request->except('items');
         $note = Note::create([...$data, 'total' => $total]);
         $note->items()->attach($items);
-        $note->load('customer');
+        $note->load('customer', 'items');
 
         return new NoteResource($note);
     }
@@ -67,7 +67,7 @@ class NoteController extends Controller
     public function show(int $id): NoteResource
     {
         $note = Note::find($id);
-        $note->load('customer');
+        $note->load('customer', 'items');
 
         return new NoteResource($note);
     }
@@ -100,7 +100,7 @@ class NoteController extends Controller
         $data = $request->except('items');
         $note->update([...$data, 'total' => $total]);
         $note->items()->sync($items);
-        $note->load('customer');
+        $note->load('customer', 'items');
 
         return new NoteResource($note);
     }
