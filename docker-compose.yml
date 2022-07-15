@@ -23,7 +23,7 @@ services:
         networks:
             - sail
         depends_on:
-            - mysql
+            - mariadb
             - redis
             - meilisearch
             - selenium
