@@ -21,7 +21,7 @@ class NoteController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $notes = Note::paginate($request->get("'pageSize', 10"));
+        $notes = Note::paginate($request->get('page_size', 20));
         $notes->load('customer', 'items');
 
         return NoteResource::collection($notes);
