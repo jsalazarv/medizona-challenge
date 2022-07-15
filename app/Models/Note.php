@@ -26,6 +26,6 @@ class Note extends Model
     }
 
     public function items() {
-        return $this->belongsToMany(Item::class, 'note_items');
+        return $this->belongsToMany(Item::class, 'note_items')->withPivot('quantity');
     }
 }

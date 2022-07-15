@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property mixed price
  * @property mixed created_at
  * @property mixed updated_at
+ * @property mixed name
  */
 class ItemResource extends JsonResource
 {
@@ -23,7 +24,11 @@ class ItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'sku' => $this->sku,
+            'quantity' => $this->whenPivotLoaded('note_items', function () {
+                return $this->pivot->quantity;
+            }),
             'price' => $this->price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
